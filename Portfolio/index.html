@@ -846,6 +846,7 @@ document.getElementById('copy').addEventListener('click',e=>{
   function href(route,hash){
     hash=hash||'';
     if(live) return '/'+route+'/'+hash;
+    if(/\.github\.io$/i.test(host)) return '../'+route+'/'+hash;
     if(local) return '../'+route+'/index.html'+hash;
     const target=route==='Portfolio'?'index.html':route+'/index.html';
     return (page==='Portfolio'?'':'../')+target+hash;

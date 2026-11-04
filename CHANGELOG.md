@@ -5,6 +5,9 @@ Each version matches the version number of the published page on claude.ai
 Versions 1–8 were made before versioning started, so only v9 onward exist as git commits.
 Earlier versions can still be viewed in the page's version history on claude.ai.
 
+## Hosting fix (no version) — 2026-11-04
+- Menu links and the root redirect now work on GitHub Pages under a sub-path (miladmdd.github.io/mmportfolio/).
+
 ## v13 — 2026-11-04
 - Turned the site into three pages laid out for MiladMadadi.co.uk:
   - `Portfolio/index.html` → MiladMadadi.co.uk/Portfolio (home page, moved from `milad-madadi-portfolio.html`)
