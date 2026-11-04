@@ -1,3 +1,4 @@
+<meta charset="utf-8">
 <title>Milad Madadi</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <meta name="description" content="Milad Madadi, Senior Data Engineer: Python, PySpark, Airflow, Microsoft Fabric and Azure lakehouse platforms.">
@@ -66,20 +67,43 @@ nav a:hover{color:var(--ink)}
 .btn:hover{border-color:var(--accent)}
 
 /* Pipeline diagram */
-.pipe{margin-top:8px;border:1px solid var(--line);border-radius:var(--radius);background:var(--surface);padding:20px;overflow-x:auto}
-.pipe-row{display:flex;align-items:stretch;gap:0;min-width:760px}
-.stage{flex:1;display:flex;flex-direction:column;gap:4px;padding:12px 14px;border-radius:8px;border:1px solid var(--line);background:var(--bg);position:relative}
-.stage b{font-family:var(--f-display);font-size:.9875rem}
-.stage small{font-size:.78rem;color:var(--muted);line-height:1.35}
-.stage .tier{width:100%;height:4px;border-radius:2px;margin-bottom:6px}
-.arrow{flex:0 0 34px;position:relative;align-self:center;height:2px;background:var(--line)}
-.arrow::after{content:"";position:absolute;right:0;top:-4px;border:5px solid transparent;border-left-color:var(--line);border-right:0}
-.arrow i{position:absolute;top:-2px;left:0;width:6px;height:6px;border-radius:50%;background:var(--accent);animation:flow 2.4s linear infinite}
-.arrow:nth-of-type(4) i{animation-delay:.4s}.arrow:nth-of-type(6) i{animation-delay:.8s}.arrow:nth-of-type(8) i{animation-delay:1.2s}.arrow:nth-of-type(10) i{animation-delay:1.6s}
-@keyframes flow{from{left:0;opacity:0}15%{opacity:1}85%{opacity:1}to{left:calc(100% - 6px);opacity:0}}
-.pipe-head{display:grid;gap:4px;margin-bottom:16px}
-.pipe-head h2{font-size:var(--s2)}
-.pipe-cap{margin-top:12px;font-size:var(--s-1);color:var(--muted);font-family:var(--f-mono)}
+/* Architecture: live medallion flow */
+.arch{margin:8px 0 0;border:1px solid var(--line);border-radius:var(--radius);background:var(--surface);padding:20px;display:grid;gap:18px;min-width:0}
+.arch-head{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:end;gap:12px 20px}
+.arch-head h2{font-size:var(--s2)}
+.arch-head p{color:var(--muted);font-size:.9375rem;max-width:58ch;margin-top:4px}
+.arch-body{display:grid;grid-template-columns:minmax(0,1fr) 290px;gap:20px;align-items:stretch}
+@media (max-width:900px){ .arch-body{grid-template-columns:1fr} }
+.arch-canvas{min-width:0}
+#arch-svg{width:100%;height:auto;display:block}
+#arch-svg text{font-family:var(--f-body);fill:var(--ink);pointer-events:none}
+#arch-svg .t-name{font-family:var(--f-display);font-weight:700;font-size:15px}
+#arch-svg .t-sub{font-family:var(--f-mono);font-size:10.5px;fill:var(--muted)}
+#arch-svg .t-pill{font-size:12px}
+#arch-svg .t-med{font-family:var(--f-display);font-weight:800;font-size:12px;fill:var(--surface)}
+#arch-svg .guide{fill:none;stroke:var(--line);stroke-width:1.5}
+#arch-svg .lake{fill:none;stroke:var(--muted);stroke-width:1;opacity:.6}
+#arch-svg .orch-link{fill:none;stroke:var(--accent);stroke-width:1.5;stroke-dasharray:4 5;opacity:.55;animation:arch-march 1.2s linear infinite}
+@keyframes arch-march{to{stroke-dashoffset:-18}}
+#arch-svg [data-stage]{cursor:pointer;transition:opacity .35s ease}
+#arch-svg.has-sel [data-stage]:not(.on){opacity:.3}
+#arch-svg .box{transition:stroke-width .3s ease}
+#arch-svg .on .box{stroke-width:2.5}
+#arch-svg .pill{fill:var(--bg);stroke:var(--line)}
+#arch-svg .on .pill{stroke:var(--accent)}
+#arch-svg .particle{opacity:.95;font-family:var(--f-mono);font-size:12px;font-weight:500}
+.arch-panel{--tier:var(--accent);position:relative;overflow:hidden;border:1px solid var(--line);border-top:3px solid var(--tier);border-radius:var(--radius);background:var(--bg);padding:18px 18px 22px;min-width:0;min-height:260px}
+.arch-panel .content{display:grid;gap:10px;animation:arch-in .45s ease both}
+@keyframes arch-in{from{opacity:.2;transform:translateY(6px)}to{opacity:1;transform:none}}
+.arch-panel .step{font-family:var(--f-mono);font-size:.72rem;letter-spacing:.08em;text-transform:uppercase;color:var(--tier)}
+.arch-panel h3{font-size:var(--s1)}
+.arch-panel p{color:var(--muted);font-size:.9375rem}
+.arch-tabs{display:flex;flex-wrap:wrap;gap:8px}
+.arch-tabs button{display:inline-flex;align-items:center;gap:7px;font-family:var(--f-mono);font-size:.76rem;padding:6px 11px;border-radius:999px;border:1px solid var(--line);background:var(--bg);color:var(--ink);cursor:pointer}
+.arch-tabs button i{width:9px;height:9px;border-radius:50%;background:var(--tier)}
+.arch-tabs button:hover{border-color:var(--tier)}
+.arch-tabs button[aria-selected="true"]{border-color:var(--tier);background:var(--surface);box-shadow:inset 0 0 0 1px var(--tier)}
+.arch-cap{font-size:var(--s-1);color:var(--muted);font-family:var(--f-mono)}
 
 /* Blog */
 .slider{position:relative}
@@ -217,22 +241,20 @@ footer .wrap{padding-block:24px}
         <ul class="stack" data-tech="Python|Apache Spark|SQL Server|Azure SQL|Oracle|MongoDB|Microsoft Azure|Microsoft Fabric|Synapse Analytics|Azure Data Factory|Apache Airflow|Delta Lake|SSIS|Docker|Linux|Power BI|SSRS|Tableau|QlikView"></ul>
       </div>
 
-      <figure class="pipe" style="margin:8px 0 0">
-        <div class="pipe-head"><div class="label">Architecture</div><h2>From source to consumer</h2></div>
-        <div class="pipe-row" role="img" aria-label="Medallion architecture: third-party and CRM sources flow into Bronze, Silver, Gold and Platinum layers, then to Power BI reporting.">
-          <div class="stage"><span class="tier t-src"></span><b>Sources</b><small>SQL Server, Dataverse CRM, call-centre data, Excel, audit logs</small></div>
-          <span class="arrow"><i></i></span>
-          <div class="stage"><span class="tier t-bronze"></span><b>Bronze</b><small>Raw landing in a Lakehouse on OneLake</small></div>
-          <span class="arrow"><i></i></span>
-          <div class="stage"><span class="tier t-silver"></span><b>Silver</b><small>Cleansed, conformed Delta tables</small></div>
-          <span class="arrow"><i></i></span>
-          <div class="stage"><span class="tier t-gold"></span><b>Gold</b><small>Modelled Fabric Warehouse</small></div>
-          <span class="arrow"><i></i></span>
-          <div class="stage"><span class="tier t-plat"></span><b>Platinum</b><small>Pre-aggregated, report-ready</small></div>
-          <span class="arrow"><i></i></span>
-          <div class="stage"><span class="tier t-src"></span><b>Consumers</b><small>Power BI, SSRS, public Data Explorer</small></div>
+      <figure class="arch" id="arch">
+        <div class="arch-head">
+          <div>
+            <div class="label">Architecture</div>
+            <h2>From source to consumer</h2>
+            <p>Watch data move through each layer and change colour as it is refined. Select a stage to see what happens there and the tools behind it.</p>
+          </div>
         </div>
-        <figcaption class="pipe-cap">The medallion architecture I designed for a UK statutory regulator on Microsoft Fabric, orchestrated with Airflow and Fabric Data Factory.</figcaption>
+        <div class="arch-tabs" id="arch-tabs" role="tablist" aria-label="Architecture stages"></div>
+        <div class="arch-body">
+          <div class="arch-canvas"><svg id="arch-svg" role="img" aria-label="Animated medallion architecture: data flows from SQL databases, Azure SQL, Dataverse, Oracle, REST APIs and Excel, CSV and Parquet files through Bronze, Silver, Gold and Platinum layers on OneLake to Power BI, Tableau, QlikView and SSRS reports, orchestrated by Apache Airflow and Fabric Data Factory."></svg></div>
+          <div class="arch-panel" id="arch-panel" role="tabpanel" aria-live="polite"></div>
+        </div>
+        <figcaption class="arch-cap">The medallion architecture I designed for a UK statutory regulator on Microsoft Fabric, orchestrated with Airflow and Fabric Data Factory.</figcaption>
       </figure>
     </div>
   </section>
@@ -597,3 +619,209 @@ document.getElementById('copy').addEventListener('click',e=>{
   function sel(){const r=document.createRange();r.selectNodeContents(document.getElementById('email'));const s=getSelection();s.removeAllRanges();s.addRange(r);btn.textContent='Press Ctrl+C';}
 });
 </script>
+<script>
+// Architecture: animated medallion flow
+(()=>{
+  const svg=document.getElementById('arch-svg'); if(!svg) return;
+  const panel=document.getElementById('arch-panel'), tabs=document.getElementById('arch-tabs');
+  const NS='http://www.w3.org/2000/svg';
+  const reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const ABBR2=Object.assign({},typeof ABBR!=='undefined'?ABBR:{},{"T-SQL":"SQL","Fabric Data Factory":"FDF"});
+  const LOGO=typeof LOGOS!=='undefined'?LOGOS:{};
+  const escA=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+
+  const STAGES=[
+    {name:"Sources",tier:"--accent",title:"Where the data comes from",
+     text:"SQL databases, Azure SQL, Dataverse, Oracle and REST APIs, plus Excel, CSV and Parquet files. Python and PySpark jobs bring them in on a schedule.",
+     tech:["SQL Server","Azure SQL","Oracle","Python","Apache Spark"]},
+    {name:"Bronze",tier:"--bronze",title:"Raw landing",
+     text:"Data lands close to how it arrived, in a Lakehouse on OneLake, so every load can be traced back and replayed.",
+     tech:["Microsoft Fabric","Delta Lake","Apache Spark"]},
+    {name:"Silver",tier:"--silver",title:"Cleanse and conform",
+     text:"Spark jobs clean, deduplicate and standardise the data into Delta tables. Automated quality checks and point-in-time snapshots built from audit data live here.",
+     tech:["Apache Spark","Delta Lake","Python"]},
+    {name:"Gold",tier:"--gold",title:"Model for the business",
+     text:"A Fabric Warehouse holds modelled, documented tables with clear lineage. This is the trusted layer that reporting reads from.",
+     tech:["Microsoft Fabric","T-SQL"]},
+    {name:"Platinum",tier:"--plat",title:"Ready to report",
+     text:"Pre-aggregated tables shaped for specific reports and publications, with data minimisation applied before anything is made public.",
+     tech:["Microsoft Fabric","Power BI"]},
+    {name:"Presentation",tier:"--accent",title:"Where people see the data",
+     text:"Power BI, Tableau and QlikView dashboards and SSRS reports read from the Gold and Platinum layers, so every report uses the same trusted numbers.",
+     tech:["Power BI","Tableau","QlikView","SSRS"]},
+    {name:"Orchestration",tier:"--accent",title:"Keep everything running in order",
+     text:"Apache Airflow handles dependencies on legacy platforms that Fabric can't orchestrate natively. Fabric Data Factory runs the native pipelines, monitored through the Monitoring hub.",
+     tech:["Apache Airflow","Fabric Data Factory","Python"]}
+  ];
+  const SRC=["SQL databases","Azure SQL","Dataverse","Oracle","REST APIs","Excel files","CSV files","Parquet files"];
+  const CON=["Power BI","Tableau","QlikView","SSRS reports"];
+  const LAYERS=[{n:"Bronze",m:"B",q:"Raw",s:"Lakehouse"},{n:"Silver",m:"S",q:"Cleansed",s:"Lakehouse"},{n:"Gold",m:"G",q:"Modelled",s:"Warehouse"},{n:"Platinum",m:"P",q:"Aggregated",s:"Warehouse"}];
+
+  let defs=null, orient=null, geo=null, gParticles=null, particles=[], sel=-1, lastSpawn=0, lastT=0, visible=true;
+
+  function el(tag,attrs,parent){const e=document.createElementNS(NS,tag);for(const k in attrs)e.setAttribute(k,attrs[k]);parent.appendChild(e);return e;}
+  function txt(parent,x,y,cls,s,anchor){const t=el('text',{x,y,class:cls,'text-anchor':anchor||'start','dominant-baseline':'middle'},parent);t.textContent=s;return t;}
+  const tierFill=v=>`fill:color-mix(in srgb, var(${v}) 12%, var(--surface));stroke:var(${v})`;
+
+  function buildGeo(o){
+    if(o==='h'){
+      return {o,W:760,H:400,
+        src:SRC.map((l,i)=>({x:6,y:24+i*44,w:120,h:28,l})),
+        lay:LAYERS.map((L,i)=>({...L,x:172+i*116,y:62,w:96,h:262,i})),
+        con:CON.map((l,i)=>({x:650,y:104+i*58,w:104,h:32,l})),
+        band:{x:172,y:346,w:444,h:40}};
+    }
+    return {o,W:360,H:716,
+      src:SRC.map((l,i)=>i<6?{x:4+(i%3)*118,y:4+Math.floor(i/3)*36,w:114,h:28,l}:{x:63+(i-6)*118,y:76,w:114,h:28,l}),
+      lay:LAYERS.map((L,i)=>({...L,x:8,y:158+i*82,w:276,h:64,i})),
+      con:CON.map((l,i)=>({x:4+(i%2)*178,y:640+Math.floor(i/2)*38,w:174,h:30,l})),
+      band:{x:298,y:158,w:56,h:310}};
+  }
+
+  function draw(){
+    const o=svg.parentElement.clientWidth>=560?'h':'v';
+    if(o===orient) return;
+    orient=o; geo=buildGeo(o); particles=[];
+    svg.innerHTML=''; svg.setAttribute('viewBox',`0 0 ${geo.W} ${geo.H}`);
+    const back=el('g',{},svg), L0=geo.lay[0], LN=geo.lay[geo.lay.length-1];
+
+    // OneLake marker
+    if(o==='h'){
+      el('path',{class:'lake',d:`M${L0.x} 50 V42 H${LN.x+LN.w} V50`},back);
+      txt(back,(L0.x+LN.x+LN.w)/2,30,'t-sub','OneLake · governed storage','middle');
+    } else txt(back,L0.x,142,'t-sub','OneLake · governed storage');
+
+    // guide curves
+    geo.src.forEach(s=>el('path',{class:'guide',d:pathFor(s,null,o==='h'?L0.y+L0.h*0.6:L0.x+L0.w*0.7,true)},back));
+    geo.con.forEach(c=>el('path',{class:'guide',d:pathFor(null,c,o==='h'?LN.y+LN.h*0.6:LN.x+LN.w*0.7,true)},back));
+
+    // orchestration links + band
+    const gBand=el('g',{'data-stage':6},back);
+    geo.lay.forEach(L=>{
+      const d=o==='h'?`M${L.x+L.w/2} ${L.y+L.h} V${geo.band.y}`:`M${L.x+L.w} ${L.y+L.h/2} H${geo.band.x}`;
+      el('path',{class:'orch-link',d},gBand);
+    });
+    el('rect',{class:'box',x:geo.band.x,y:geo.band.y,width:geo.band.w,height:geo.band.h,rx:10,style:tierFill('--accent')},gBand);
+
+    // layer boxes
+    const gLay=geo.lay.map((L,i)=>{
+      const g=el('g',{'data-stage':i+1},back);
+      el('rect',{class:'box',x:L.x,y:L.y,width:L.w,height:L.h,rx:14,style:tierFill(`--${['bronze','silver','gold','plat'][i]}`)},g);
+      return g;
+    });
+    // pills
+    const gSrc=el('g',{'data-stage':0},back), gCon=el('g',{'data-stage':5},back);
+    geo.src.forEach(s=>el('rect',{class:'pill',x:s.x,y:s.y,width:s.w,height:s.h,rx:s.h/2},gSrc));
+    geo.con.forEach(c=>el('rect',{class:'pill',x:c.x,y:c.y,width:c.w,height:c.h,rx:c.h/2},gCon));
+
+    defs=el('defs',{},svg);
+    gParticles=el('g',{'aria-hidden':'true'},svg);
+    const front=el('g',{},svg);
+
+    // labels
+    const fSrc=el('g',{'data-stage':0},front), fCon=el('g',{'data-stage':5},front), fBand=el('g',{'data-stage':6},front);
+    geo.src.forEach(s=>txt(fSrc,s.x+s.w/2,s.y+s.h/2+1,'t-pill',s.l,'middle'));
+    geo.con.forEach(c=>{el('circle',{cx:c.x+13,cy:c.y+c.h/2,r:4,style:'fill:var(--accent)'},fCon);txt(fCon,c.x+c.w/2+6,c.y+c.h/2+1,'t-pill',c.l,'middle');});
+    geo.lay.forEach((L,i)=>{
+      const g=el('g',{'data-stage':i+1},front), v=`--${['bronze','silver','gold','plat'][i]}`;
+      if(o==='h'){
+        el('circle',{cx:L.x+L.w/2,cy:L.y+30,r:15,style:`fill:var(${v})`},g); txt(g,L.x+L.w/2,L.y+31,'t-med',L.m,'middle');
+        txt(g,L.x+L.w/2,L.y+64,'t-name',L.n,'middle'); txt(g,L.x+L.w/2,L.y+82,'t-sub',L.q,'middle'); txt(g,L.x+L.w/2,L.y+96,'t-sub',L.s,'middle');
+      } else {
+        el('circle',{cx:L.x+24,cy:L.y+L.h/2,r:14,style:`fill:var(${v})`},g); txt(g,L.x+24,L.y+L.h/2+1,'t-med',L.m,'middle');
+        txt(g,L.x+48,L.y+L.h/2-8,'t-name',L.n); txt(g,L.x+48,L.y+L.h/2+11,'t-sub',`${L.q} · ${L.s}`);
+      }
+    });
+    if(o==='h') txt(fBand,geo.band.x+geo.band.w/2,geo.band.y+geo.band.h/2+1,'t-pill','Orchestration · Apache Airflow + Fabric Data Factory','middle');
+    else { const t=txt(fBand,0,0,'t-pill','Orchestration · Airflow + Fabric Data Factory','middle'); t.setAttribute('transform',`translate(${geo.band.x+geo.band.w/2} ${geo.band.y+geo.band.h/2}) rotate(90)`); }
+
+    applySel();
+    if(reduce) seedStatic();
+  }
+
+  // path from a source (or the last layer) to the first layer (or a consumer), through a lane
+  function pathFor(s,c,lane,guide){
+    const L0=geo.lay[0], LN=geo.lay[geo.lay.length-1];
+    if(geo.o==='h'){
+      const a=s?`M${s.x+s.w} ${s.y+s.h/2} C${s.x+s.w+34} ${s.y+s.h/2} ${L0.x-34} ${lane} ${L0.x} ${lane}`:`M${LN.x+LN.w} ${lane}`;
+      if(guide&&s) return a;
+      const mid=s?` L${LN.x+LN.w} ${lane}`:'';
+      return a+mid+(c?` C${LN.x+LN.w+18} ${lane} ${c.x-18} ${c.y+c.h/2} ${c.x} ${c.y+c.h/2}`:'');
+    }
+    const a=s?`M${s.x+s.w/2} ${s.y+s.h} C${s.x+s.w/2} ${s.y+s.h+34} ${lane} ${L0.y-34} ${lane} ${L0.y}`:`M${lane} ${LN.y+LN.h}`;
+    if(guide&&s) return a;
+    const mid=s?` L${lane} ${LN.y+LN.h}`:'';
+    return a+mid+(c?` C${lane} ${LN.y+LN.h+60} ${c.x+c.w/2} ${c.y-60} ${c.x+c.w/2} ${c.y}`:'');
+  }
+
+  function colourAt(p){
+    const a=geo.o==='h'?p.x:p.y; let v='--accent';
+    geo.lay.forEach((L,i)=>{const st=geo.o==='h'?L.x:L.y; if(a>=st) v=`--${['bronze','silver','gold','plat'][i]}`;});
+    const LN=geo.lay[geo.lay.length-1], end=geo.o==='h'?LN.x+LN.w:LN.y+LN.h;
+    return a>end+2?'--accent':v;
+  }
+
+  function spawn(progress){
+    const s=geo.src[Math.floor(Math.random()*geo.src.length)], c=geo.con[Math.floor(Math.random()*geo.con.length)], L0=geo.lay[0];
+    const lane=geo.o==='h'?L0.y+110+Math.random()*(L0.h-126):L0.x+160+Math.random()*(L0.w-176);
+    const path=document.createElementNS(NS,'path'); path.setAttribute('d',pathFor(s,c,lane)); defs.appendChild(path);
+    const len=path.getTotalLength();
+    const dot=el('text',{class:'particle','text-anchor':'middle','dominant-baseline':'central'},gParticles); dot.textContent=Math.random()<.5?'0':'1';
+    const p={path,len,d:(progress||0)*len,v:.09+Math.random()*.05,dot,col:''};
+    place(p); particles.push(p); return p;
+  }
+  function place(p){
+    const pt=p.path.getPointAtLength(Math.min(p.d,p.len));
+    p.dot.setAttribute('x',pt.x.toFixed(1)); p.dot.setAttribute('y',pt.y.toFixed(1));
+    const col=colourAt(pt); if(col!==p.col){p.col=col;p.dot.style.fill=`var(${col})`;}
+  }
+  function seedStatic(){ for(let i=0;i<16;i++) spawn(Math.random()); }
+
+  function frame(t){
+    const dt=Math.min(64,t-(lastT||t)); lastT=t;
+    if(visible&&!document.hidden&&geo&&!reduce){
+      if(t-lastSpawn>230&&particles.length<42){spawn();lastSpawn=t;}
+      for(let i=particles.length-1;i>=0;i--){const p=particles[i]; p.d+=p.v*dt; if(p.d>=p.len){p.dot.remove();p.path.remove();particles.splice(i,1);} else place(p);}
+    }
+    requestAnimationFrame(frame);
+  }
+
+  function applySel(){
+    svg.classList.toggle('has-sel',sel>=0);
+    svg.querySelectorAll('[data-stage]').forEach(g=>g.classList.toggle('on',+g.dataset.stage===sel));
+  }
+  function techHTML(list){
+    return '<ul class="stack">'+list.map(t=>{const s=LOGO[t];return `<li><span class="logo${s?'':' abbr'}">${s||escA(ABBR2[t]||t.slice(0,3))}</span><span class="name">${escA(t)}</span></li>`;}).join('')+'</ul>';
+  }
+  function render(){
+    if(sel<0){
+      panel.style.setProperty('--tier','var(--accent)'); panel.removeAttribute('aria-labelledby');
+      panel.innerHTML=`<div class="content"><div class="step">Overview</div><h3>Eight sources, four layers, one platform</h3><p>Data is ingested from the sources, refined from Bronze to Platinum on OneLake, and presented in the reporting tools. Select a stage above or in the diagram to see what happens there.</p></div>`;
+    } else {
+      const st=STAGES[sel];
+      panel.style.setProperty('--tier',`var(${st.tier})`);
+      panel.setAttribute('aria-labelledby','arch-tab-'+sel);
+      panel.innerHTML=`<div class="content"><div class="step">Step ${sel+1} of ${STAGES.length} · ${escA(st.name)}</div><h3>${escA(st.title)}</h3><p>${escA(st.text)}</p>${techHTML(st.tech)}</div>`;
+    }
+    const focusIdx=sel<0?0:sel;
+    [...tabs.children].forEach((b,i)=>{b.setAttribute('aria-selected',String(i===sel));b.tabIndex=i===focusIdx?0:-1;});
+  }
+  function select(i){
+    sel=i===sel?-1:(i+STAGES.length)%STAGES.length; applySel(); render();
+  }
+
+  tabs.innerHTML=STAGES.map((s,i)=>`<button type="button" role="tab" id="arch-tab-${i}" aria-controls="arch-panel" style="--tier:var(${s.tier})"><i></i>${escA(s.name)}</button>`).join('');
+  tabs.addEventListener('click',e=>{const b=e.target.closest('button'); if(b) select([...tabs.children].indexOf(b));});
+  tabs.addEventListener('keydown',e=>{
+    const k={ArrowRight:1,ArrowDown:1,ArrowLeft:-1,ArrowUp:-1}[e.key]; if(!k) return;
+    e.preventDefault(); const n=((sel<0?0:sel)+k+STAGES.length)%STAGES.length; sel=-2; select(n); tabs.children[n].focus();
+  });
+  svg.addEventListener('click',e=>{const g=e.target.closest('[data-stage]'); if(g) select(+g.dataset.stage);});
+
+  draw(); render();
+  new ResizeObserver(()=>draw()).observe(svg.parentElement);
+  if('IntersectionObserver' in window) new IntersectionObserver(es=>{visible=es[0].isIntersecting;}).observe(svg);
+  requestAnimationFrame(frame);
+})();
+</script>
+
