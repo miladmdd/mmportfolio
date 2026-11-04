@@ -5,6 +5,16 @@ Each version matches the version number of the published page on claude.ai
 Versions 1–8 were made before versioning started, so only v9 onward exist as git commits.
 Earlier versions can still be viewed in the page's version history on claude.ai.
 
+## v13 — 2026-11-04
+- Turned the site into three pages laid out for MiladMadadi.co.uk:
+  - `Portfolio/index.html` → MiladMadadi.co.uk/Portfolio (home page, moved from `milad-madadi-portfolio.html`)
+  - `Independent_Researches/index.html` → MiladMadadi.co.uk/Independent_Researches (new)
+  - `Blog/index.html` → MiladMadadi.co.uk/Blog, titled "Milad Madadi Blog" (new, with topic filter)
+  - `index.html` at the root redirects MiladMadadi.co.uk to /Portfolio/.
+- New top menu on every page: Portfolio, Independent Researches, Blog, Contact (scrolls to the contact section on the home page). The current page is underlined.
+- Added a "See all posts on the blog" link under the home page's blog slider.
+- Gave the home page a full HTML document (doctype, viewport) so it renders correctly on a normal web host.
+
 ## v12 — 2026-11-04
 - Redesigned the "From source to consumer" architecture section as an animated, interactive diagram:
   random 0s and 1s flow from sources through Bronze, Silver, Gold and Platinum to the presentation layer, changing colour at each layer.

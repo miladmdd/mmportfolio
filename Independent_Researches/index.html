@@ -1,0 +1,144 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Independent Researches</title>
+<meta name="site-page" content="Independent_Researches">
+<meta name="description" content="Independent research by Milad Madadi into data platform design, governance and cost.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=IBM+Plex+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+html{color-scheme:light}body{margin:0}img{max-width:100%}[hidden]{display:none!important}
+:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+:root{
+  --bg:#f3f6f7; --surface:#ffffff; --ink:#122029; --muted:#55666f; --line:#d6dfe3;
+  --accent:#0a6b75; --accent-ink:#ffffff; --accent-soft:#dbeef0; --logo-bg:#ffffff;
+  --bronze:#9a5b30; --silver:#6f7d86; --gold:#9c7a12; --plat:#4f6596;
+  --f-display:"Bricolage Grotesque", "Segoe UI", system-ui, sans-serif;
+  --f-body:"IBM Plex Sans", "Segoe UI", system-ui, sans-serif;
+  --f-mono:"JetBrains Mono", ui-monospace, "Cascadia Mono", Consolas, monospace;
+  --s-1:.8125rem; --s0:1rem; --s1:1.125rem; --s2:1.5rem; --s3:2.25rem; --s4:clamp(2.5rem,6vw,4.25rem);
+  --radius:10px; --wrap:1120px;
+}
+@media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){
+  --bg:#0e1519; --surface:#141e23; --ink:#e4ecef; --muted:#98a8b0; --line:#25353d;
+  --accent:#55c3cb; --accent-ink:#06262a; --accent-soft:#163338; --logo-bg:#eef3f5;
+  --bronze:#d38d5d; --silver:#aebac1; --gold:#d8b448; --plat:#98acdb; color-scheme:dark;
+}}
+:root[data-theme="dark"]{
+  --bg:#0e1519; --surface:#141e23; --ink:#e4ecef; --muted:#98a8b0; --line:#25353d;
+  --accent:#55c3cb; --accent-ink:#06262a; --accent-soft:#163338; --logo-bg:#eef3f5;
+  --bronze:#d38d5d; --silver:#aebac1; --gold:#d8b448; --plat:#98acdb; color-scheme:dark;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+@media (prefers-reduced-motion: reduce){ html{scroll-behavior:auto} *{animation:none!important;transition:none!important} }
+body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:var(--s0);line-height:1.6;}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--bg)}
+a{color:var(--accent)}
+:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:4px}
+.wrap{max-width:var(--wrap);margin-inline:auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));}
+h1,h2,h3{font-family:var(--f-display);text-wrap:balance;margin:0;line-height:1.1}
+h2{font-size:var(--s3);font-weight:700;letter-spacing:-.01em}
+h3{font-size:var(--s1);font-weight:700}
+p{margin:0}
+.label{font-family:var(--f-mono);font-size:var(--s-1);letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+
+/* Nav */
+header.nav{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:color-mix(in srgb,var(--bg) 88%,transparent);backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
+header.nav .wrap{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:8px 20px;padding-block:12px}
+.brand{font-family:var(--f-display);font-weight:800;font-size:var(--s1);color:var(--ink);text-decoration:none}
+nav ul{display:flex;flex-wrap:wrap;gap:6px 20px;list-style:none;margin:0;padding:0}
+nav a{color:var(--muted);text-decoration:none;font-size:.9375rem;padding-block:4px;border-bottom:2px solid transparent}
+nav a:hover{color:var(--ink)}
+nav a[aria-current="page"]{color:var(--ink);border-bottom-color:var(--accent)}
+@media (max-width:640px){ nav ul{gap:4px 14px} nav a{font-size:.875rem} }
+
+
+/* Page */
+.page-hero .wrap{padding-block:56px 32px;display:grid;gap:16px}
+.page-hero h1{font-size:var(--s4);font-weight:800;letter-spacing:-.025em}
+.page-hero p{max-width:62ch;font-size:var(--s1);color:var(--muted)}
+section > .wrap{padding-block:24px 64px}
+footer{font-size:var(--s-1);color:var(--muted);border-top:1px solid var(--line)}
+footer .wrap{padding-block:24px;display:flex;flex-wrap:wrap;justify-content:space-between;gap:12px}
+footer a{color:var(--muted)}
+.empty{background:var(--surface);border:1px dashed var(--line);border-radius:var(--radius);padding:32px 24px;display:grid;gap:12px;justify-items:start}
+.empty h2{font-size:var(--s2)}
+.empty p{color:var(--muted);max-width:60ch}
+.btn{display:inline-flex;align-items:center;padding:10px 18px;border-radius:999px;font-weight:600;text-decoration:none;background:var(--accent);color:var(--accent-ink)}
+.areas{margin-top:40px}
+.areas h2{font-size:var(--s2);margin:6px 0 18px}
+.area-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,260px),1fr));gap:18px;list-style:none;margin:0;padding:0}
+.area-grid li{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:20px;display:grid;gap:8px;align-content:start}
+.area-grid h3{font-size:var(--s1)}
+.area-grid p{color:var(--muted);font-size:.9375rem}
+</style>
+</head>
+<body>
+<header class="nav">
+  <div class="wrap">
+    <a class="brand" href="/Portfolio/" data-route="Portfolio">Milad Madadi</a>
+    <nav aria-label="Site"><ul>
+      <li><a href="/Portfolio/" data-route="Portfolio">Portfolio</a></li>
+      <li><a href="/Independent_Researches/" data-route="Independent_Researches">Independent Researches</a></li>
+      <li><a href="/Blog/" data-route="Blog">Blog</a></li>
+      <li><a href="/Portfolio/#contact" data-route="Portfolio" data-hash="#contact">Contact</a></li>
+    </ul></nav>
+  </div>
+</header>
+
+<main>
+<section class="page-hero"><div class="wrap">
+  <div class="label">Research</div>
+  <h1>Independent Researches</h1>
+  <p>Independent research into how data platforms are designed, governed and run, written up with the evidence behind each finding.</p>
+</div></section>
+<section><div class="wrap">
+  <div class="empty">
+    <div class="label">Coming soon</div>
+    <h2>The first write-ups are on the way</h2>
+    <p>Research papers and findings will be published here. Get in touch if you'd like to collaborate or be told when the first one is out.</p>
+    <a class="btn" href="/Portfolio/#contact" data-route="Portfolio" data-hash="#contact">Get in touch</a>
+  </div>
+  <div class="areas">
+    <div class="label">Areas of interest</div>
+    <h2>What I research</h2>
+    <ul class="area-grid">
+      <li><h3>Lakehouse architecture</h3><p>How medallion layers on Microsoft Fabric and OneLake hold up as platforms grow.</p></li>
+      <li><h3>Cloud data cost</h3><p>Where data pipelines waste compute, and which design choices keep spend predictable.</p></li>
+      <li><h3>Data quality at scale</h3><p>Automated checks and reconciliation for data that reaches regulators, researchers and the public.</p></li>
+      <li><h3>Point-in-time modelling</h3><p>Rebuilding reliable history from audit data for as-at and trend analysis.</p></li>
+    </ul>
+  </div>
+</div></section>
+</main>
+<footer><div class="wrap"><span>© 2026 Milad Madadi</span><a href="/Portfolio/#contact" data-route="Portfolio" data-hash="#contact">Get in touch</a></div></footer>
+<script>
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+
+// Site navigation. On MiladMadadi.co.uk links use clean URLs (/Portfolio/, /Blog/, /Independent_Researches/).
+// Elsewhere (a local copy, or the claude.ai preview) they point at the matching index.html files instead.
+(()=>{
+  const page=(document.querySelector('meta[name="site-page"]')||{}).content||'Portfolio';
+  const host=location.hostname;
+  const live=/(^|\.)miladmadadi\.co\.uk$/i.test(host);
+  const local=location.protocol==='file:'||/^(localhost|127\.0\.0\.1|\[::1\])$/.test(host);
+  function href(route,hash){
+    hash=hash||'';
+    if(live) return '/'+route+'/'+hash;
+    if(local) return '../'+route+'/index.html'+hash;
+    const target=route==='Portfolio'?'index.html':route+'/index.html';
+    return (page==='Portfolio'?'':'../')+target+hash;
+  }
+  document.querySelectorAll('a[data-route]').forEach(a=>{
+    const r=a.dataset.route, h=a.dataset.hash;
+    a.href=(r===page&&h)?h:href(r,h);
+    if(r===page&&!h&&a.closest('nav')) a.setAttribute('aria-current','page');
+  });
+})();
+</script>
+</body>
+</html>

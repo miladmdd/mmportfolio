@@ -1,5 +1,11 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
 <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<style>html{color-scheme:light}body{margin:0}img{max-width:100%}[hidden]{display:none!important}:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}</style>
 <title>Milad Madadi</title>
+<meta name="site-page" content="Portfolio">
 <meta name="claude:viewport-fit-sides" content="cover">
 <meta name="description" content="Milad Madadi, Senior Data Engineer: Python, PySpark, Airflow, Microsoft Fabric and Azure lakehouse platforms.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -44,12 +50,13 @@ p{margin:0}
 
 /* Nav */
 header.nav{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:color-mix(in srgb,var(--bg) 88%,transparent);backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
-header.nav .wrap{display:flex;align-items:center;justify-content:space-between;gap:16px;padding-block:12px}
+header.nav .wrap{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:8px 20px;padding-block:12px}
 .brand{font-family:var(--f-display);font-weight:800;font-size:var(--s1);color:var(--ink);text-decoration:none}
-nav ul{display:flex;gap:20px;list-style:none;margin:0;padding:0}
-nav a{color:var(--muted);text-decoration:none;font-size:.9375rem}
+nav ul{display:flex;flex-wrap:wrap;gap:6px 20px;list-style:none;margin:0;padding:0}
+nav a{color:var(--muted);text-decoration:none;font-size:.9375rem;padding-block:4px;border-bottom:2px solid transparent}
 nav a:hover{color:var(--ink)}
-@media (max-width:640px){ nav ul{gap:14px} nav li.opt{display:none} }
+nav a[aria-current="page"]{color:var(--ink);border-bottom-color:var(--accent)}
+@media (max-width:640px){ nav ul{gap:4px 14px} nav a{font-size:.875rem} }
 
 /* Hero */
 .hero .wrap{padding-block:64px 40px;display:grid;gap:28px}
@@ -116,6 +123,8 @@ nav a:hover{color:var(--ink)}
 .slide-btn{width:40px;height:40px;border-radius:50%;border:1px solid var(--line);background:var(--surface);color:var(--ink);font-size:1.1rem;cursor:pointer;display:grid;place-items:center}
 .slide-btn:hover:not(:disabled){border-color:var(--accent);color:var(--accent)}
 .slide-btn:disabled{opacity:.35;cursor:default}
+.see-all{display:inline-block;margin-top:20px;font-weight:600;text-decoration:none}
+.see-all:hover{text-decoration:underline}
 .dots{display:flex;gap:6px;justify-content:center;margin-top:16px}
 .dots button{width:8px;height:8px;border-radius:50%;border:0;padding:0;background:var(--line);cursor:pointer}
 .dots button[aria-current="true"]{background:var(--accent);width:22px;border-radius:4px}
@@ -212,15 +221,16 @@ footer{font-size:var(--s-1);color:var(--muted)}
 footer .wrap{padding-block:24px}
 </style>
 
+</head>
+<body>
 <header class="nav">
   <div class="wrap">
-    <a class="brand" href="#top">Milad Madadi</a>
-    <nav aria-label="Sections"><ul>
-      <li><a href="#blog">Blog</a></li>
-      <li><a href="#projects">Projects</a></li>
-      <li><a href="#skills">Skills</a></li>
-      <li class="opt"><a href="#experience">Experience</a></li>
-      <li><a href="#contact">Contact</a></li>
+    <a class="brand" href="/Portfolio/" data-route="Portfolio">Milad Madadi</a>
+    <nav aria-label="Site"><ul>
+      <li><a href="/Portfolio/" data-route="Portfolio">Portfolio</a></li>
+      <li><a href="/Independent_Researches/" data-route="Independent_Researches">Independent Researches</a></li>
+      <li><a href="/Blog/" data-route="Blog">Blog</a></li>
+      <li><a href="/Portfolio/#contact" data-route="Portfolio" data-hash="#contact">Contact</a></li>
     </ul></nav>
   </div>
 </header>
@@ -273,6 +283,7 @@ footer .wrap{padding-block:24px}
         <div class="posts" id="posts" tabindex="0" aria-label="Blog posts, scroll sideways for more"></div>
         <div class="dots" id="dots" role="group" aria-label="Jump to post"></div>
       </div>
+      <a class="see-all" href="/Blog/" data-route="Blog">See all posts on the blog →</a>
     </div>
   </section>
 
@@ -824,4 +835,27 @@ document.getElementById('copy').addEventListener('click',e=>{
   requestAnimationFrame(frame);
 })();
 </script>
-
+<script>
+// Site navigation. On MiladMadadi.co.uk links use clean URLs (/Portfolio/, /Blog/, /Independent_Researches/).
+// Elsewhere (a local copy, or the claude.ai preview) they point at the matching index.html files instead.
+(()=>{
+  const page=(document.querySelector('meta[name="site-page"]')||{}).content||'Portfolio';
+  const host=location.hostname;
+  const live=/(^|\.)miladmadadi\.co\.uk$/i.test(host);
+  const local=location.protocol==='file:'||/^(localhost|127\.0\.0\.1|\[::1\])$/.test(host);
+  function href(route,hash){
+    hash=hash||'';
+    if(live) return '/'+route+'/'+hash;
+    if(local) return '../'+route+'/index.html'+hash;
+    const target=route==='Portfolio'?'index.html':route+'/index.html';
+    return (page==='Portfolio'?'':'../')+target+hash;
+  }
+  document.querySelectorAll('a[data-route]').forEach(a=>{
+    const r=a.dataset.route, h=a.dataset.hash;
+    a.href=(r===page&&h)?h:href(r,h);
+    if(r===page&&!h&&a.closest('nav')) a.setAttribute('aria-current','page');
+  });
+})();
+</script>
+</body>
+</html>
