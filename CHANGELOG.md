@@ -5,6 +5,15 @@ Each version matches the version number of the published page on claude.ai
 Versions 1–8 were made before versioning started, so only v9 onward exist as git commits.
 Earlier versions can still be viewed in the page's version history on claude.ai.
 
+## v14 — 2026-11-06
+- New page `AI_FDE/index.html` → MiladMadadi.co.uk/AI_FDE, titled "AI FDE", presenting Forward Deployed Engineering work:
+  - Hero with an animated hand-tracking visual (21 landmarks, driver-side region).
+  - "The forward-deployed loop": Discover, Architect, Specify hardware, Design the experience, Sell and deploy, each tied to the gesture project.
+  - AI projects: the gesture-ordering case study as the featured project, linked to its slide deck.
+  - Full case study: problem, an interactive (simulated) gesture menu demo, edge pipeline on an Nvidia Jetson Orin Nano, key decisions, design challenges and the won contract.
+  - Recommendations section, ready for real quotes (shows "Coming soon" until they are added).
+- Added "AI FDE" to the top menu on every page, after Portfolio.
+
 ## Hosting fix (no version) — 2026-11-04
 - Menu links and the root redirect now work on GitHub Pages under a sub-path (miladmdd.github.io/mmportfolio/).
 

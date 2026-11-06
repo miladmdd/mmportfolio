@@ -1,0 +1,554 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>AI FDE</title>
+<meta name="site-page" content="AI_FDE">
+<meta name="description" content="Milad Madadi, Forward Deployed Engineer: AI projects taken from customer discovery to deployment, including a gesture-ordering system for drive-throughs.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=IBM+Plex+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+html{color-scheme:light}body{margin:0}img{max-width:100%}[hidden]{display:none!important}
+:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+:root{
+  --bg:#f3f6f7; --surface:#ffffff; --ink:#122029; --muted:#55666f; --line:#d6dfe3;
+  --accent:#0a6b75; --accent-ink:#ffffff; --accent-soft:#dbeef0; --logo-bg:#ffffff;
+  --bronze:#9a5b30; --silver:#6f7d86; --gold:#9c7a12; --plat:#4f6596;
+  --f-display:"Bricolage Grotesque", "Segoe UI", system-ui, sans-serif;
+  --f-body:"IBM Plex Sans", "Segoe UI", system-ui, sans-serif;
+  --f-mono:"JetBrains Mono", ui-monospace, "Cascadia Mono", Consolas, monospace;
+  --s-1:.8125rem; --s0:1rem; --s1:1.125rem; --s2:1.5rem; --s3:2.25rem; --s4:clamp(2.5rem,6vw,4.25rem);
+  --radius:10px; --wrap:1120px;
+}
+@media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){
+  --bg:#0e1519; --surface:#141e23; --ink:#e4ecef; --muted:#98a8b0; --line:#25353d;
+  --accent:#55c3cb; --accent-ink:#06262a; --accent-soft:#163338; --logo-bg:#eef3f5;
+  --bronze:#d38d5d; --silver:#aebac1; --gold:#d8b448; --plat:#98acdb; color-scheme:dark;
+}}
+:root[data-theme="dark"]{
+  --bg:#0e1519; --surface:#141e23; --ink:#e4ecef; --muted:#98a8b0; --line:#25353d;
+  --accent:#55c3cb; --accent-ink:#06262a; --accent-soft:#163338; --logo-bg:#eef3f5;
+  --bronze:#d38d5d; --silver:#aebac1; --gold:#d8b448; --plat:#98acdb; color-scheme:dark;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+@media (prefers-reduced-motion: reduce){ html{scroll-behavior:auto} *{animation:none!important;transition:none!important} }
+body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:var(--s0);line-height:1.6;}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--bg)}
+a{color:var(--accent)}
+:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:4px}
+.wrap{max-width:var(--wrap);margin-inline:auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));}
+h1,h2,h3{font-family:var(--f-display);text-wrap:balance;margin:0;line-height:1.1}
+h2{font-size:var(--s3);font-weight:700;letter-spacing:-.01em}
+h3{font-size:var(--s1);font-weight:700}
+p{margin:0}
+.label{font-family:var(--f-mono);font-size:var(--s-1);letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+
+/* Nav */
+header.nav{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:color-mix(in srgb,var(--bg) 88%,transparent);backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
+header.nav .wrap{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:8px 20px;padding-block:12px}
+.brand{font-family:var(--f-display);font-weight:800;font-size:var(--s1);color:var(--ink);text-decoration:none}
+nav ul{display:flex;flex-wrap:wrap;gap:6px 20px;list-style:none;margin:0;padding:0}
+nav a{color:var(--muted);text-decoration:none;font-size:.9375rem;padding-block:4px;border-bottom:2px solid transparent}
+nav a:hover{color:var(--ink)}
+nav a[aria-current="page"]{color:var(--ink);border-bottom-color:var(--accent)}
+@media (max-width:640px){ nav ul{gap:4px 14px} nav a{font-size:.875rem} }
+
+
+/* AI FDE: a field console. The hero and case-study bands are a dark "on-site" console in both themes;
+   amber (the signal colour from the gesture case study) marks live, deployed things. */
+:root{
+  --console:#10151f; --console-card:#1b2230; --console-line:#2c3546; --console-ink:#f5f2eb; --console-muted:#b9c2d0;
+  --signal:#f2a541; --signal-ink:#10151f;
+  --signal-text:#9a5410;
+}
+@media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){ --signal-text:#f2a541; }}
+:root[data-theme="dark"]{ --signal-text:#f2a541; }
+
+.console{background:var(--console);color:var(--console-ink)}
+.console .label{color:var(--signal)}
+.console a{color:var(--signal)}
+
+/* Hero */
+.fde-hero .wrap{padding-block:64px 56px;display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,.85fr);gap:40px;align-items:center}
+@media (max-width:860px){ .fde-hero .wrap{grid-template-columns:1fr} }
+.fde-hero h1{font-size:var(--s4);font-weight:800;letter-spacing:-.025em;margin:14px 0 18px}
+.fde-hero h1 em{font-style:normal;color:var(--signal)}
+.fde-hero .lede{font-size:var(--s1);color:var(--console-muted);max-width:56ch}
+.fde-hero .cta{display:flex;flex-wrap:wrap;gap:12px;margin-top:26px}
+.btn{display:inline-flex;align-items:center;gap:8px;padding:10px 18px;border-radius:999px;font-weight:600;text-decoration:none;border:1px solid var(--line);color:var(--ink);background:var(--surface)}
+.btn.signal{background:var(--signal);color:var(--signal-ink);border-color:var(--signal)}
+.console .btn.ghost{background:transparent;color:var(--console-ink);border-color:var(--console-line)}
+.console .btn.ghost:hover{border-color:var(--signal)}
+.fde-facts{display:flex;flex-wrap:wrap;gap:8px 18px;margin-top:26px;font-family:var(--f-mono);font-size:.78rem;color:var(--console-muted)}
+.fde-facts span::before{content:"";display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--signal);margin-right:8px;vertical-align:middle}
+
+.tracker{position:relative;border:1px solid var(--console-line);border-radius:var(--radius);background:radial-gradient(120% 80% at 50% 0%, #1b2230 0%, var(--console) 70%);aspect-ratio:6/7;max-width:440px;width:100%;justify-self:center;overflow:hidden}
+.tracker svg{position:absolute;inset:8% 10%;width:80%;height:84%}
+.tracker .bones{stroke:#3a4558;stroke-width:6;stroke-linecap:round;fill:none}
+.tracker .joints circle{fill:var(--signal);animation:joint 2.4s ease-in-out infinite}
+.tracker .joints circle:nth-child(3n){animation-delay:.4s}.tracker .joints circle:nth-child(3n+1){animation-delay:.8s}
+@keyframes joint{0%,100%{opacity:1}50%{opacity:.45}}
+.tracker .hand{animation:hover 6s ease-in-out infinite;transform-origin:50% 90%}
+@keyframes hover{0%,100%{transform:translate(0,0) rotate(0)}50%{transform:translate(6px,-8px) rotate(-2deg)}}
+.tracker .scan{position:absolute;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--signal),transparent);opacity:.55;animation:scan 3.2s linear infinite}
+@keyframes scan{from{top:6%}to{top:94%}}
+.tracker .corner{position:absolute;width:22px;height:22px;border:2px solid var(--signal)}
+.tracker .c1{top:14px;left:14px;border-right:0;border-bottom:0}.tracker .c2{top:14px;right:14px;border-left:0;border-bottom:0}
+.tracker .c3{bottom:14px;left:14px;border-right:0;border-top:0}.tracker .c4{bottom:14px;right:14px;border-left:0;border-top:0}
+.tracker .tag{position:absolute;left:16px;right:16px;bottom:44px;display:flex;justify-content:space-between;gap:10px;font-family:var(--f-mono);font-size:.72rem;color:var(--console-muted)}
+.tracker .tag b{color:var(--signal);font-weight:500}
+
+/* Sections */
+section > .wrap{padding-block:64px}
+.sec-head{display:flex;flex-wrap:wrap;align-items:end;justify-content:space-between;gap:12px 24px;margin-bottom:28px}
+.sec-head p{color:var(--muted);max-width:58ch}
+.console .sec-head p{color:var(--console-muted)}
+.label.signal{color:var(--signal-text)}
+
+/* FDE loop */
+.loop{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:0;counter-reset:step;position:relative}
+.loop::before{content:"";position:absolute;left:0;right:0;top:19px;height:2px;background:linear-gradient(90deg,var(--signal-text),var(--accent))}
+.loop li{position:relative;padding:0 18px 0 0;display:grid;gap:8px;align-content:start;min-width:0}
+.loop .n{position:relative;width:40px;height:40px;border-radius:50%;display:grid;place-items:center;background:var(--bg);border:2px solid var(--signal-text);color:var(--signal-text);font-family:var(--f-mono);font-weight:500;font-size:.85rem;margin-bottom:8px}
+.loop h3{font-size:var(--s1)}
+.loop p{color:var(--muted);font-size:.9375rem}
+.loop .in{font-size:.875rem;color:var(--ink);border-top:1px dashed var(--line);padding-top:8px;margin-top:4px}
+.loop .in b{font-family:var(--f-mono);font-size:.7rem;letter-spacing:.06em;text-transform:uppercase;color:var(--signal-text);display:block;margin-bottom:2px;font-weight:500}
+@media (max-width:900px){
+  .loop{grid-template-columns:1fr;gap:22px}
+  .loop::before{left:19px;right:auto;top:0;bottom:0;width:2px;height:auto;background:linear-gradient(180deg,var(--signal-text),var(--accent))}
+  .loop li{grid-template-columns:40px minmax(0,1fr);column-gap:16px;padding:0}
+  .loop .n{grid-row:span 3;margin:0}
+}
+
+/* Projects */
+.projects{display:grid;grid-template-columns:minmax(0,2fr) minmax(0,1fr);gap:18px}
+@media (max-width:860px){ .projects{grid-template-columns:1fr} }
+.proj{border-radius:var(--radius);padding:26px;display:grid;gap:12px;align-content:start;min-width:0}
+.proj.feature{background:var(--console);color:var(--console-ink);border:1px solid var(--console-line);position:relative;overflow:hidden}
+.proj.feature::after{content:"";position:absolute;right:-60px;top:-60px;width:220px;height:220px;border-radius:50%;background:radial-gradient(circle,rgba(242,165,65,.25),transparent 70%)}
+.proj.feature h3{font-size:var(--s2)}
+.proj.feature p{color:var(--console-muted)}
+.proj .chips{display:flex;flex-wrap:wrap;gap:6px}
+.proj .chips span{font-family:var(--f-mono);font-size:.72rem;padding:3px 9px;border-radius:999px;border:1px solid var(--console-line);color:var(--console-muted)}
+.proj .status{display:inline-flex;align-items:center;gap:8px;font-family:var(--f-mono);font-size:.75rem;color:var(--signal)}
+.proj .status::before{content:"";width:8px;height:8px;border-radius:50%;background:var(--signal);box-shadow:0 0 0 4px rgba(242,165,65,.2)}
+.proj .actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:6px}
+.proj.next{border:1px dashed var(--line);background:var(--surface)}
+.proj.next h3{font-size:var(--s1)}
+.proj.next p{color:var(--muted);font-size:.9375rem}
+
+/* Case study */
+.case-head h2{font-size:var(--s3)}
+.case-block{display:grid;gap:22px;margin-top:56px}
+.case-block:first-of-type{margin-top:0}
+.case-block > h3{font-size:var(--s2)}
+.case-block > .label{margin-bottom:-14px}
+.pains{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px}
+@media (max-width:900px){ .pains{grid-template-columns:repeat(2,minmax(0,1fr))} }
+@media (max-width:480px){ .pains{grid-template-columns:1fr} }
+.pain{background:var(--console-card);border:1px solid var(--console-line);border-radius:var(--radius);padding:18px;display:grid;gap:6px;align-content:start}
+.pain h4{margin:0;font-family:var(--f-display);font-size:var(--s1)}
+.pain p{color:var(--console-muted);font-size:.9rem}
+.note{border-left:4px solid var(--signal);padding:4px 0 4px 16px;color:var(--console-ink);max-width:70ch}
+
+/* Gesture demo */
+.demo{display:grid;grid-template-columns:minmax(0,300px) minmax(0,1fr);gap:18px;align-items:start}
+@media (max-width:860px){ .demo{grid-template-columns:1fr} }
+.gestures{display:grid;gap:8px}
+.gestures button{display:flex;justify-content:space-between;align-items:center;gap:10px;text-align:left;padding:10px 14px;border-radius:8px;border:1px solid var(--console-line);background:var(--console-card);color:var(--console-ink);font:inherit;font-size:.9rem;cursor:pointer}
+.gestures button span{font-family:var(--f-mono);font-size:.72rem;color:var(--console-muted)}
+.gestures button:hover,.gestures button.hit{border-color:var(--signal)}
+.gestures button.hit span{color:var(--signal)}
+.fingers{display:flex;gap:6px;padding:2px 0 4px}
+.fingers button{flex:1;justify-content:center;padding:8px 0}
+.screen{background:#0b0f16;border:1px solid var(--console-line);border-radius:14px;padding:16px;display:grid;gap:12px;min-width:0}
+.screen-top{display:flex;justify-content:space-between;gap:10px;font-family:var(--f-mono);font-size:.72rem;color:var(--console-muted)}
+.menu-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.item{border:2px solid var(--console-line);border-radius:10px;padding:14px;display:grid;gap:4px;transition:border-color .2s,background .2s}
+.item b{font-family:var(--f-display);font-size:1rem}
+.item small{color:var(--console-muted);font-size:.78rem}
+.item.hl{border-color:var(--signal)}
+.item.sel{background:rgba(242,165,65,.14);border-color:var(--signal)}
+.item .q{font-family:var(--f-mono);font-size:.75rem;color:var(--signal)}
+.status-line{font-family:var(--f-mono);font-size:.8rem;color:var(--signal);min-height:1.4em}
+.order{border-top:1px dashed var(--console-line);padding-top:10px;display:grid;gap:4px;font-size:.875rem;color:var(--console-muted)}
+.order b{color:var(--console-ink);font-weight:600}
+.demo-note{font-size:var(--s-1);color:var(--console-muted);font-family:var(--f-mono)}
+
+/* Pipeline */
+.pipeline{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:12px;position:relative}
+@media (max-width:900px){ .pipeline{grid-template-columns:1fr} }
+.node{background:var(--console-card);border:1px solid var(--console-line);border-radius:12px;padding:16px;display:grid;gap:6px;position:relative;min-width:0}
+.node .k{font-family:var(--f-mono);font-size:.7rem;color:var(--console-muted)}
+.node h4{margin:0;font-family:var(--f-display);font-size:1.05rem;color:var(--signal)}
+.node p{color:var(--console-muted);font-size:.875rem}
+.node:not(:last-child)::after{content:"";position:absolute;top:50%;right:-12px;width:12px;height:2px;background:var(--signal)}
+@media (max-width:900px){ .node:not(:last-child)::after{top:auto;bottom:-12px;right:auto;left:24px;width:2px;height:12px} }
+.edge{border:1px dashed var(--signal);border-radius:16px;padding:18px;display:grid;gap:14px;position:relative}
+.edge-tag{display:flex;flex-wrap:wrap;justify-content:space-between;gap:10px;font-family:var(--f-mono);font-size:.75rem;color:var(--signal)}
+.pulse{position:absolute;top:0;left:0;width:10px;height:10px;border-radius:50%;background:var(--signal);box-shadow:0 0 12px var(--signal);animation:travel 4s linear infinite;pointer-events:none}
+@keyframes travel{0%{top:calc(100% - 10px);left:0;opacity:0}5%{opacity:1}95%{opacity:1}100%{top:calc(100% - 10px);left:calc(100% - 10px);opacity:0}}
+@media (max-width:900px){ .pulse{display:none} }
+.api{display:flex;flex-wrap:wrap;align-items:center;gap:10px;font-size:.9rem;color:var(--console-muted)}
+.api b{color:var(--console-ink)}
+.api i{font-style:normal;font-family:var(--f-mono);color:var(--signal)}
+
+/* Decisions + challenges */
+.table-wrap{overflow-x:auto;border:1px solid var(--console-line);border-radius:12px}
+table.dec{width:100%;border-collapse:collapse;min-width:620px;font-size:.92rem}
+table.dec th,table.dec td{text-align:left;padding:12px 14px;border-bottom:1px solid var(--console-line);vertical-align:top}
+table.dec th{font-family:var(--f-mono);font-size:.72rem;letter-spacing:.06em;text-transform:uppercase;color:var(--console-muted);font-weight:500}
+table.dec tr:last-child td{border-bottom:0}
+table.dec td:first-child{color:var(--signal);font-weight:600;white-space:nowrap}
+table.dec td{color:var(--console-ink)}
+table.dec td:last-child{color:var(--console-muted)}
+.challenges{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+@media (max-width:760px){ .challenges{grid-template-columns:1fr} }
+.ch{background:var(--console-card);border:1px solid var(--console-line);border-radius:var(--radius);padding:18px;display:grid;gap:6px}
+.ch h4{margin:0;font-family:var(--f-display);font-size:var(--s1)}
+.ch p{color:var(--console-muted);font-size:.9rem}
+.ch .fix{color:var(--signal);font-size:.9rem}
+.outcome{display:grid;grid-template-columns:auto minmax(0,1fr);gap:18px;align-items:center;background:var(--signal);color:var(--signal-ink);border-radius:var(--radius);padding:22px 24px}
+.outcome strong{font-family:var(--f-display);font-size:var(--s3);line-height:1}
+.outcome p{font-size:var(--s1);max-width:60ch}
+@media (max-width:560px){ .outcome{grid-template-columns:1fr} }
+.stack-row .stack .logo{background:var(--logo-bg)}
+
+/* Recommendations */
+.recs{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,320px),1fr));gap:18px}
+.rec{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:24px;display:grid;gap:14px;margin:0}
+.rec blockquote{margin:0;font-size:var(--s1);line-height:1.55}
+.rec figcaption{color:var(--muted);font-size:.9rem}
+.rec figcaption b{color:var(--ink)}
+.rec-empty{border:1px dashed var(--line);border-radius:var(--radius);padding:28px 24px;display:grid;gap:10px;justify-items:start;background:var(--surface)}
+.rec-empty p{color:var(--muted);max-width:60ch}
+
+/* CTA */
+.fde-cta .wrap{padding-block:56px;display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:20px}
+.fde-cta h2{font-size:var(--s3);max-width:22ch}
+
+/* logo tiles (shared look with the portfolio) */
+.stack{list-style:none;margin:0;padding:0;display:flex;flex-wrap:wrap;gap:12px 10px}
+.stack li{display:flex;flex-direction:column;align-items:center;gap:5px;width:72px;text-align:center}
+.stack .logo{width:44px;height:44px;border-radius:9px;background:var(--logo-bg);border:1px solid var(--console-line);display:grid;place-items:center;padding:7px}
+.stack .logo svg{width:100%;height:100%;display:block}
+.stack .logo.abbr{background:var(--console-card);color:var(--signal);font-family:var(--f-display);font-weight:700;font-size:.8rem;padding:0}
+.stack .name{font-size:.68rem;line-height:1.25;color:var(--console-muted)}
+
+footer{font-size:var(--s-1);color:var(--muted);border-top:1px solid var(--line)}
+footer .wrap{padding-block:24px;display:flex;flex-wrap:wrap;justify-content:space-between;gap:12px}
+footer a{color:var(--muted)}
+</style>
+</head>
+<body>
+<header class="nav">
+  <div class="wrap">
+    <a class="brand" href="/Portfolio/" data-route="Portfolio">Milad Madadi</a>
+    <nav aria-label="Site"><ul>
+      <li><a href="/Portfolio/" data-route="Portfolio">Portfolio</a></li>
+      <li><a href="/AI_FDE/" data-route="AI_FDE">AI FDE</a></li>
+      <li><a href="/Independent_Researches/" data-route="Independent_Researches">Independent Researches</a></li>
+      <li><a href="/Blog/" data-route="Blog">Blog</a></li>
+      <li><a href="/Portfolio/#contact" data-route="Portfolio" data-hash="#contact">Contact</a></li>
+    </ul></nav>
+  </div>
+</header>
+<main>
+<section class="fde-hero console">
+  <div class="wrap">
+    <div>
+      <div class="label">AI · Forward Deployed Engineering</div>
+      <h1>I take AI out of the lab and <em>into the customer's site</em>.</h1>
+      <p class="lede">As a Forward Deployed Engineer I work on site with the customer. I find the real problem, architect the system, specify the hardware, design the experience people actually use, and close the deal.</p>
+      <div class="cta">
+        <a class="btn signal" href="#case">See the case study</a>
+        <a class="btn ghost" href="/Portfolio/#contact" data-route="Portfolio" data-hash="#contact">Discuss a deployment</a>
+      </div>
+      <div class="fde-facts">
+        <span>Computer vision</span><span>Edge AI</span><span>Customer discovery</span><span>Solution architecture</span><span>Technical sales</span>
+      </div>
+    </div>
+    <div class="tracker" role="img" aria-label="A tracked hand: 21 landmarks joined into a skeleton, inside a camera frame.">
+      <span class="corner c1"></span><span class="corner c2"></span><span class="corner c3"></span><span class="corner c4"></span>
+      <span class="scan"></span>
+      <svg viewBox="60 110 440 560" aria-hidden="true">
+        <g class="hand">
+          <g class="bones">
+            <polyline points="300,640 220,560 170,490 130,440 100,400"/>
+            <polyline points="300,640 240,400 225,300 215,240 208,190"/>
+            <polyline points="300,385 300,270 300,200 300,140"/>
+            <polyline points="360,400 375,295 383,232 390,185"/>
+            <polyline points="300,640 410,430 435,350 450,305 462,265"/>
+            <polyline points="240,400 300,385 360,400 410,430"/>
+          </g>
+          <g class="joints">
+            <circle cx="300" cy="640" r="12"/><circle cx="220" cy="560" r="10"/><circle cx="170" cy="490" r="10"/><circle cx="130" cy="440" r="10"/><circle cx="100" cy="400" r="10"/>
+            <circle cx="240" cy="400" r="10"/><circle cx="225" cy="300" r="10"/><circle cx="215" cy="240" r="10"/><circle cx="208" cy="190" r="10"/>
+            <circle cx="300" cy="385" r="10"/><circle cx="300" cy="270" r="10"/><circle cx="300" cy="200" r="10"/><circle cx="300" cy="140" r="10"/>
+            <circle cx="360" cy="400" r="10"/><circle cx="375" cy="295" r="10"/><circle cx="383" cy="232" r="10"/><circle cx="390" cy="185" r="10"/>
+            <circle cx="410" cy="430" r="10"/><circle cx="435" cy="350" r="10"/><circle cx="450" cy="305" r="10"/><circle cx="462" cy="265" r="10"/>
+          </g>
+        </g>
+      </svg>
+      <div class="tag"><span>DRIVER-SIDE REGION</span><span><b>21</b> LANDMARKS · EDGE</span></div>
+    </div>
+  </div>
+</section>
+
+<section id="loop">
+  <div class="wrap">
+    <div class="sec-head">
+      <div><div class="label signal">How I work</div><h2>The forward-deployed loop</h2></div>
+      <p>Every deployment runs through the same five steps, from the first site visit to a signed contract. Here is each step, and what it looked like on my gesture-ordering project.</p>
+    </div>
+    <ol class="loop">
+      <li><span class="n">01</span><h3>Discover</h3><p>Go on site, map the real workflow and its constraints with the people who run it.</p><p class="in"><b>Gesture ordering</b>Mapped the ordering flow and the lane with operations.</p></li>
+      <li><span class="n">02</span><h3>Architect</h3><p>Design the end-to-end system around the customer's existing tools, not instead of them.</p><p class="in"><b>Gesture ordering</b>Vision pipeline, gesture model and an API link to the ordering system.</p></li>
+      <li><span class="n">03</span><h3>Specify hardware</h3><p>Choose the devices that make the model work in the real environment.</p><p class="in"><b>Gesture ordering</b>Cameras and an edge device for each lane.</p></li>
+      <li><span class="n">04</span><h3>Design the experience</h3><p>Shape the interface so people can use the AI without being taught.</p><p class="in"><b>Gesture ordering</b>A new digital menu built for gestures, not touch.</p></li>
+      <li><span class="n">05</span><h3>Sell and deploy</h3><p>Present the full offer to leadership and turn it into a signed deployment.</p><p class="in"><b>Gesture ordering</b>Presented to the client's leadership and closed the contract.</p></li>
+    </ol>
+  </div>
+</section>
+
+<section id="projects" style="border-top:1px solid var(--line)">
+  <div class="wrap">
+    <div class="sec-head">
+      <div><div class="label signal">Deployed work</div><h2>AI projects</h2></div>
+      <p>AI systems I have taken from discovery to a customer decision.</p>
+    </div>
+    <div class="projects">
+      <article class="proj feature">
+        <span class="status">Contract won</span>
+        <h3>Gesture ordering for drive-throughs</h3>
+        <p>A hand-gesture detection system that lets customers order without shouting into a speaker box. I architected the solution, specified the hardware, designed a gesture-optimised digital menu and sold it to a company in Turkey.</p>
+        <div class="chips"><span>Computer vision</span><span>Edge AI</span><span>Retail</span><span>Accessibility</span></div>
+        <div class="actions">
+          <a class="btn signal" href="#case">Read the case study</a>
+          <a class="btn ghost" href="https://claude.ai/artifact/3v2YyKxd4QPuPbR3v4kFTc" target="_blank" rel="noopener">Open the slide deck ↗</a>
+        </div>
+      </article>
+      <article class="proj next">
+        <div class="label">Next deployment</div>
+        <h3>More AI case studies on the way</h3>
+        <p>New forward-deployed projects will be written up here as they are cleared for publication.</p>
+        <a class="btn" href="/Portfolio/#contact" data-route="Portfolio" data-hash="#contact" style="justify-self:start">Start a project with me</a>
+      </article>
+    </div>
+  </div>
+</section>
+
+<section id="case" class="console">
+  <div class="wrap">
+    <div class="sec-head case-head">
+      <div><div class="label">Case study · Forward deployed</div><h2>Ordering at the drive-through, by hand</h2></div>
+      <p>From a noisy speaker box to a quiet, accessible ordering channel running on one edge device in the lane.</p>
+    </div>
+
+    <div class="case-block">
+      <div class="label">The problem</div>
+      <h3>The speaker box is the weakest link in the drive-through</h3>
+      <div class="pains">
+        <div class="pain"><h4>Noise</h4><p>Engines, wind and traffic drown out the customer, so staff have to ask again.</p></div>
+        <div class="pain"><h4>Accuracy</h4><p>Misheard items turn into remakes, refunds and a slower lane for everyone behind.</p></div>
+        <div class="pain"><h4>Access</h4><p>Customers who are hard of hearing or speech-impaired are left out.</p></div>
+        <div class="pain"><h4>Language</h4><p>Accents and non-native speakers are easily misunderstood over a crackly speaker.</p></div>
+      </div>
+      <p class="note"><b>For this client:</b> their drive-through sits in a noisy, busy area, and orders were regularly coming through wrong.</p>
+    </div>
+
+    <div class="case-block">
+      <div class="label">The solution</div>
+      <h3>Try the gesture menu</h3>
+      <p style="color:var(--console-muted);max-width:66ch">A camera at window height tracks the driver's hand. Each gesture maps to an ordering action, and the screen confirms every step. Voice ordering stays available: gestures are an extra, quieter channel. Use the gestures below to order.</p>
+      <div class="demo">
+        <div class="gestures" id="gestures" aria-label="Gestures">
+          <button type="button" data-g="select">Point and hold<span>SELECT</span></button>
+          <div>
+            <div class="demo-note" style="margin-bottom:6px">Show 1–5 fingers · QUANTITY</div>
+            <div class="fingers" id="fingers"></div>
+          </div>
+          <button type="button" data-g="up">Swipe up<span>SCROLL</span></button>
+          <button type="button" data-g="down">Swipe down<span>SCROLL</span></button>
+          <button type="button" data-g="left">Swipe left<span>PAGE</span></button>
+          <button type="button" data-g="right">Swipe right<span>PAGE</span></button>
+          <button type="button" data-g="confirm">Thumbs up<span>CONFIRM</span></button>
+          <button type="button" data-g="cancel">Thumbs down<span>CANCEL</span></button>
+          <button type="button" data-g="staff">Open palm<span>SPEAK TO STAFF</span></button>
+        </div>
+        <div class="screen" aria-live="polite">
+          <div class="screen-top"><span>LANE 1 · GESTURE MENU</span><span id="page-ind">PAGE 1 / 2</span></div>
+          <div class="menu-grid" id="menu"></div>
+          <div class="status-line" id="status">Point and hold to select the highlighted item.</div>
+          <div class="order" id="order"></div>
+        </div>
+      </div>
+      <p class="demo-note">Simulated demo of the gesture-optimised menu. Items are examples.</p>
+    </div>
+
+    <div class="case-block">
+      <div class="label">How it works</div>
+      <h3>From camera frame to order in real time</h3>
+      <div class="edge">
+        <div class="edge-tag"><span>NVIDIA JETSON ORIN NANO 8GB · IN THE LANE</span><span>VIDEO NEVER LEAVES THE SITE</span></div>
+        <div class="pipeline">
+          <div class="node"><span class="k">01</span><h4>Camera</h4><p>Lane-facing camera at window height</p></div>
+          <div class="node"><span class="k">02</span><h4>Hand tracking</h4><p>21 hand landmarks per frame</p></div>
+          <div class="node"><span class="k">03</span><h4>Gesture model</h4><p>Landmarks to gesture, smoothed over frames</p></div>
+          <div class="node"><span class="k">04</span><h4>Order engine</h4><p>Gesture plus menu state to order action</p></div>
+          <div class="node"><span class="k">05</span><h4>Menu &amp; ordering</h4><p>Gesture menu updates on screen</p></div>
+        </div>
+        <span class="pulse" aria-hidden="true"></span>
+      </div>
+      <div class="api"><i>API →</i> Orders flow into the <b>client's existing ordering system</b>, the one staff already use.</div>
+      <div class="stack-row"><ul class="stack" data-tech="MediaPipe|NVIDIA Jetson|Edge AI|REST API"></ul></div>
+    </div>
+
+    <div class="case-block">
+      <div class="label">Engineering</div>
+      <h3>Key technical decisions</h3>
+      <div class="table-wrap">
+        <table class="dec">
+          <tr><th>Area</th><th>Choice</th><th>Why</th></tr>
+          <tr><td>Hand tracking</td><td>MediaPipe Hands</td><td>Fast, proven landmarks; no face data needed</td></tr>
+          <tr><td>Gesture model</td><td>Two parts: a custom MediaPipe Gesture Recognizer for poses, plus landmark motion tracking for swipes</td><td>Poses and movements need different methods; both stay fast on the edge and cope with glare</td></tr>
+          <tr><td>Deployment</td><td>AI core and API middleware both on one Nvidia Jetson Orin Nano 8GB</td><td>A single edge device; low latency; keeps working if the network drops</td></tr>
+          <tr><td>Privacy</td><td>Landmarks only, no video stored</td><td>Simpler sign-off from legal and customers</td></tr>
+          <tr><td>Integration</td><td>The client's existing ordering system, via its API</td><td>No replacement needed; gesture orders flow into the system staff already use</td></tr>
+        </table>
+      </div>
+    </div>
+
+    <div class="case-block">
+      <div class="label">Design challenges</div>
+      <h3>What the architecture had to solve</h3>
+      <div class="challenges">
+        <div class="ch"><h4>Lighting and glare</h4><p>Sun on windscreens, night shifts, headlights.</p><p class="fix">→ A high-resolution camera with infrared and tuned exposure</p></div>
+        <div class="ch"><h4>Whose hand is it?</h4><p>Passengers and kids in the back also wave.</p><p class="fix">→ A driver-side region of interest</p></div>
+        <div class="ch"><h4>Accidental gestures</h4><p>A stray movement must never place an order.</p><p class="fix">→ On-screen feedback and a confirm step</p></div>
+        <div class="ch"><h4>First-time customers</h4><p>People don't expect to order with their hands.</p><p class="fix">→ An on-screen gesture guide</p></div>
+      </div>
+    </div>
+
+    <div class="case-block">
+      <div class="outcome"><strong>Sold</strong><p>Designed, specified and presented end to end, and the contract was won with a drive-through company in Turkey.</p></div>
+    </div>
+  </div>
+</section>
+
+<section id="recommendations">
+  <div class="wrap">
+    <div class="sec-head">
+      <div><div class="label signal">In their words</div><h2>Recommendations</h2></div>
+      <p>What clients and colleagues say about working with me on AI deployments.</p>
+    </div>
+    <div id="recs"></div>
+  </div>
+</section>
+
+<section class="fde-cta console">
+  <div class="wrap">
+    <h2>Taking an AI idea into the real world?</h2>
+    <div style="display:flex;flex-wrap:wrap;gap:12px">
+      <a class="btn signal" href="/Portfolio/#contact" data-route="Portfolio" data-hash="#contact">Get in touch</a>
+      <a class="btn ghost" href="/Portfolio/" data-route="Portfolio">See my data engineering work</a>
+    </div>
+  </div>
+</section>
+
+</main>
+<footer><div class="wrap"><span>© 2026 Milad Madadi</span><a href="/Portfolio/#contact" data-route="Portfolio" data-hash="#contact">Get in touch</a></div></footer>
+<script>
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+// Recommendations: add real ones here as {quote, name, role}. Nothing shows as a quote until it is added.
+const recommendations = [];
+
+// Logo tiles
+const LOGOS = {"NVIDIA Jetson": "<svg viewBox=\"0 0 512 98\" xmlns=\"http://www.w3.org/2000/svg\" aria-hidden=\"true\"><path d=\"M312.805 18.394v63.838h18.015V18.394zm-141.742-.108v63.892h18.178v-49.61l14.174.054c4.653 0 7.899 1.136 10.117 3.517c2.867 3.03 4.003 7.952 4.003 16.879v29.16h17.637V46.904c0-25.21-16.068-28.618-31.757-28.618zm170.793.108v63.838h29.214c15.58 0 20.666-2.597 26.13-8.386c3.896-4.057 6.384-13.038 6.384-22.83c0-8.98-2.11-16.987-5.843-21.964c-6.6-8.927-16.23-10.658-30.62-10.658zm17.853 13.85h7.736c11.253 0 18.503 5.03 18.503 18.123s-7.25 18.177-18.503 18.177h-7.736zm-72.872-13.85l-15.04 50.583l-14.39-50.583H237.93l20.558 63.838h25.967l20.775-63.838zm125.187 63.838h18.015V18.394h-18.015zm50.529-63.838l-25.157 63.784h17.745l4.004-11.307h29.754l3.787 11.252H512l-25.373-63.73zm11.685 11.631l10.929 29.863h-22.181z\"/><path fill=\"#76B900\" d=\"M54.803 28.997v-8.764c.866-.054 1.731-.108 2.597-.108c24.02-.757 39.763 20.666 39.763 20.666S80.176 64.38 61.944 64.38c-2.434 0-4.815-.379-7.087-1.136V36.626c9.36 1.136 11.253 5.247 16.825 14.606L84.18 40.737s-9.143-11.956-24.507-11.956c-1.623-.054-3.246.054-4.869.216m0-28.997v13.092l2.597-.162c33.38-1.136 55.182 27.374 55.182 27.374S87.587 70.708 61.566 70.708c-2.273 0-4.49-.216-6.709-.595v8.115c1.84.217 3.733.379 5.572.379c24.237 0 41.765-12.389 58.753-26.996c2.813 2.272 14.336 7.736 16.717 10.117c-16.122 13.525-53.721 24.399-75.037 24.399a53 53 0 0 1-5.95-.325v11.415h92.077V0zm0 63.243v6.924c-22.397-4.003-28.619-27.32-28.619-27.32s10.766-11.902 28.619-13.85v7.574h-.054c-9.36-1.136-16.717 7.628-16.717 7.628s4.166 14.77 16.771 19.044M15.04 41.873s13.254-19.584 39.817-21.64v-7.14C25.427 15.472 0 40.357 0 40.357s14.39 41.657 54.803 45.444v-7.574C25.156 74.55 15.04 41.873 15.04 41.873\"/></svg>"};
+const ABBR = {"MediaPipe":"MP","Edge AI":"Edge","REST API":"API"};
+document.querySelectorAll('.stack').forEach(ul=>{
+  ul.innerHTML=ul.dataset.tech.split('|').map(t=>{const s=LOGOS[t];return `<li><span class="logo${s?'':' abbr'}">${s||esc(ABBR[t]||t.slice(0,3))}</span><span class="name">${esc(t)}</span></li>`;}).join('');
+});
+
+// Recommendations
+(()=>{
+  const el=document.getElementById('recs');
+  if(recommendations.length){
+    el.innerHTML='<div class="recs">'+recommendations.map(r=>`<figure class="rec"><blockquote>“${esc(r.quote)}”</blockquote><figcaption><b>${esc(r.name)}</b>${r.role?', '+esc(r.role):''}</figcaption></figure>`).join('')+'</div>';
+  } else {
+    el.innerHTML=`<div class="rec-empty"><div class="label">Coming soon</div><p>Recommendations from clients and colleagues will be shared here. Worked with me on an AI project? I'd be glad to hear from you.</p><a class="btn" href="/Portfolio/#contact" data-route="Portfolio" data-hash="#contact">Get in touch</a></div>`;
+  }
+})();
+
+// Gesture menu demo (simulated)
+(()=>{
+  const pages=[
+    [{n:"Classic burger",d:"Beef, cheese, pickles"},{n:"Chicken wrap",d:"Grilled chicken, salad"},{n:"Fries",d:"Regular or large"},{n:"Side salad",d:"Seasonal leaves"}],
+    [{n:"Cola",d:"Chilled, 400 ml"},{n:"Iced tea",d:"Lemon"},{n:"Coffee",d:"Americano"},{n:"Milkshake",d:"Vanilla"}]
+  ];
+  const menu=document.getElementById('menu'), status=document.getElementById('status'), orderEl=document.getElementById('order'), pageInd=document.getElementById('page-ind'), g=document.getElementById('gestures');
+  if(!menu) return;
+  document.getElementById('fingers').innerHTML=[1,2,3,4,5].map(n=>`<button type="button" data-g="qty" data-n="${n}" aria-label="Show ${n} finger${n>1?'s':''}">${n}</button>`).join('');
+  let page=0, hl=0, sel=null, qty=1, order=[];
+  function render(){
+    pageInd.textContent=`PAGE ${page+1} / ${pages.length}`;
+    menu.innerHTML=pages[page].map((it,i)=>{
+      const isSel=sel&&sel.page===page&&sel.i===i;
+      return `<div class="item${i===hl?' hl':''}${isSel?' sel':''}"><b>${esc(it.n)}</b><small>${esc(it.d)}</small>${isSel?`<span class="q">QTY ${qty}</span>`:''}</div>`;
+    }).join('');
+    orderEl.innerHTML=order.length?'<b>Your order</b>'+order.map(o=>`<span>${o.q} × ${esc(o.n)}</span>`).join(''):'<span>Your order is empty.</span>';
+  }
+  const say=t=>{status.textContent=t;};
+  const cur=()=>pages[page][hl];
+  const act={
+    select(){ sel={page,i:hl}; qty=1; say(`Selected ${cur().n}. Show fingers for quantity, then thumbs up.`); },
+    qty(n){ if(!sel){say('Point and hold on an item first.');return;} qty=n; say(`Quantity ${n}. Thumbs up to confirm.`); },
+    up(){ hl=(hl+2)%4; say(`Highlighted ${cur().n}.`); },
+    down(){ hl=(hl+2)%4; say(`Highlighted ${cur().n}.`); },
+    left(){ page=(page-1+pages.length)%pages.length; hl=0; say(`Page ${page+1}: ${page?'drinks':'food'}.`); },
+    right(){ page=(page+1)%pages.length; hl=0; say(`Page ${page+1}: ${page?'drinks':'food'}.`); },
+    confirm(){
+      if(!sel){say('Nothing selected yet. Point and hold on an item.');return;}
+      const it=pages[sel.page][sel.i]; const ex=order.find(o=>o.n===it.n);
+      ex?ex.q+=qty:order.push({n:it.n,q:qty}); say(`Added ${qty} × ${it.n} to your order.`); sel=null;
+    },
+    cancel(){ if(sel){say('Selection cancelled.');sel=null;} else if(order.length){const o=order.pop();say(`Removed ${o.n}.`);} else say('Nothing to cancel.'); },
+    staff(){ say('Connecting you to a member of staff…'); }
+  };
+  g.addEventListener('click',e=>{
+    const b=e.target.closest('button[data-g]'); if(!b) return;
+    act[b.dataset.g](+b.dataset.n);
+    b.classList.add('hit'); setTimeout(()=>b.classList.remove('hit'),500);
+    render();
+  });
+  render();
+})();
+
+// Site navigation. On MiladMadadi.co.uk links use clean URLs (/Portfolio/, /Blog/, /Independent_Researches/).
+// Elsewhere (a local copy, or the claude.ai preview) they point at the matching index.html files instead.
+(()=>{
+  const page=(document.querySelector('meta[name="site-page"]')||{}).content||'Portfolio';
+  const host=location.hostname;
+  const live=/(^|\.)miladmadadi\.co\.uk$/i.test(host);
+  const local=location.protocol==='file:'||/^(localhost|127\.0\.0\.1|\[::1\])$/.test(host);
+  function href(route,hash){
+    hash=hash||'';
+    if(live) return '/'+route+'/'+hash;
+    if(/\.github\.io$/i.test(host)) return '../'+route+'/'+hash;
+    if(local) return '../'+route+'/index.html'+hash;
+    const target=route==='Portfolio'?'index.html':route+'/index.html';
+    return (page==='Portfolio'?'':'../')+target+hash;
+  }
+  document.querySelectorAll('a[data-route]').forEach(a=>{
+    const r=a.dataset.route, h=a.dataset.hash;
+    a.href=(r===page&&h)?h:href(r,h);
+    if(r===page&&!h&&a.closest('nav')) a.setAttribute('aria-current','page');
+  });
+})();
+</script>
+</body>
+</html>
